@@ -94,11 +94,56 @@ def add_data_universitario(row):
     if not 'UNIVERSITARIO' in row:
         return
 
-    age = int(row["CH06"])
-
-    if age < 18:
+    if int(row["CH06"]) < 18:  # CH06 es la edad
         row["UNIVERSITARIO"] = 2
-    elif row["NIVEL_ED"] == "6":
+        return
+
+    level = int(row["CH12"])
+
+    if level == 8 or level == 7 and row["CH13"] == "1":
         row["UNIVERSITARIO"] = 1
     else:
         row["UNIVERSITARIO"] = 0
+
+
+def imprimir_alfabetizadas(diccionario):
+    """
+    Imprime la cantidad de personas alfabetizadas por año.
+
+    Args:
+    :param diccionario: Diccionario con los datos de alfabetización.
+    """
+
+    print("Año\tAlfabetizados\tNo alfabetizados")
+    for key, value in diccionario.items():
+        print(f"{key}\t{value['A']}\t\t{value['NA']}")
+
+
+def cant_personas_alfabetizadas(csv_reader):
+    """
+    Cuenta la cantidad de personas alfabetizadas en el archivo CSV por año.
+    Se clasifican a las personas que tengan 2 años o más.
+
+    Args:
+    :param csv_reader: Lector CSV.
+    """
+
+    # Inicializa el contador
+    count = {}
+
+    # Itera sobre cada fila del lector CSV
+    for row in csv_reader:
+
+        # Si el año no existe, lo crea
+        if row["ANO4"] not in count:
+            count[row["ANO4"]] = {"A": 0, "NA": 0}
+
+        # Analiza solo si está en el trimestre 4 y edad mayor a 2 años
+        # Se usa 3 para la prueba NO OLVIDAR DE CAMBIAR
+        if row["CH09"] != "3" and row["TRIMESTRE"] == "3":
+            if row["CH09"] == "1":
+                count[row["ANO4"]]["A"] += row["PONDERA"]
+            else:
+                count[row["ANO4"]]["NA"] += row["PONDERA"]
+
+    imprimir_alfabetizadas(count)
