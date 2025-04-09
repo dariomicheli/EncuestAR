@@ -142,8 +142,26 @@ def cant_personas_alfabetizadas(csv_reader):
         # Se usa 3 para la prueba NO OLVIDAR DE CAMBIAR
         if row["CH09"] != "3" and row["TRIMESTRE"] == "3":
             if row["CH09"] == "1":
-                count[row["ANO4"]]["A"] += row["PONDERA"]
+                count[row["ANO4"]]["A"] += int(row["PONDERA"])
             else:
-                count[row["ANO4"]]["NA"] += row["PONDERA"]
+                count[row["ANO4"]]["NA"] += int(row["PONDERA"])
 
     imprimir_alfabetizadas(count)
+
+
+def porc_extranjero_universitario(anio, trim, csv_reader):
+
+    count = {"argentino": 0, "extranjero": 0}
+
+    for row in csv_reader:
+        if row["ANO4"] == anio and row["TRIMESTRE"] == trim and row["NIVEL_ED_str"] == "Superior o universitario":
+            if int(row["CH15"]) in (4, 5):
+                count["extranjero"] += int(row["PONDERA"])
+            else:
+                count["argentino"] += int(row["PONDERA"])
+
+    porcentaje = (count["extranjero"] /
+                  (count["argentino"] + count["extranjero"])) * 100
+
+    print(
+        f"El % de personas extranjeras que han cursado el nivel superior o universitario en el trimestre {trim} del año {anio} es del: {porcentaje:.2f}%")
