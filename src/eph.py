@@ -117,7 +117,7 @@ def cant_personas_alfabetizadas(data):
     Se clasifican a las personas que tengan 2 años o más.
 
     Args:
-    :param data: lista de diccionario con los datos.
+    :param data: lista de datos del dataset.
     """
 
     # Inicializa el contador
@@ -157,3 +157,44 @@ def porc_extranjero_universitario(anio, trim, data):
 
     print(
         f"El % de personas extranjeras que han cursado el nivel superior o universitario en el trimestre {trim} del año {anio} es del: {porcentaje:.2f}%")
+
+
+def info_menor_desocupacion(data):
+    """
+    Informa el año y trimestre donde hubo menor desocupación
+    y la cantidad de personas desocupadas.
+
+    Args:
+    :param data: lista de datos del dataset
+    """
+
+    # Filtra los datos para obtener solo los desocupados
+    desocupados = filter(
+        lambda x: x["CONDICION_LABORAL"] == "Desocupado", data)
+
+    # Inicializa un diccionario para almacenar la cantidad de desocupados por año y trimestre
+    total_trim = {}
+
+    # Itera sobre cada fila de los desocupados para acumular el total por año y trimestre
+    for row in desocupados:
+        if row["ANO4"] not in total_trim:
+            total_trim[row["ANO4"]] = {}
+        if row["TRIMESTRE"] not in total_trim[row["ANO4"]]:
+            total_trim[row["ANO4"]][row["TRIMESTRE"]] = 0
+
+        total_trim[row['ANO4']][row["TRIMESTRE"]] += int(row["PONDERA"])
+
+    # Se obtiene el menor valor de desocupacion
+    min_valor = min(valor for trimestres in total_trim.values()
+                    for valor in trimestres.values())
+
+    resultados = []
+    for anio, trimestres in total_trim.items():
+        for trimestre, valor in trimestres.items():
+            if valor == min_valor:
+                resultados.append((anio, trimestre))
+
+    print(
+        f"Valor mínimo de desocupación: {min_valor} en los siguientes años y trimestres:")
+    for anio, trimestre in resultados:
+        print(f"Año: {anio}, Trimestre: {trimestre}")
