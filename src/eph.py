@@ -119,20 +119,20 @@ def imprimir_alfabetizadas(diccionario):
         print(f"{key}\t{value['A']}\t\t{value['NA']}")
 
 
-def cant_personas_alfabetizadas(csv_reader):
+def cant_personas_alfabetizadas(data):
     """
     Cuenta la cantidad de personas alfabetizadas en el archivo CSV por año.
     Se clasifican a las personas que tengan 2 años o más.
 
     Args:
-    :param csv_reader: Lector CSV.
+    :param data: lista de diccionario con los datos.
     """
 
     # Inicializa el contador
     count = {}
 
     # Itera sobre cada fila del lector CSV
-    for row in csv_reader:
+    for row in data:
 
         # Si el año no existe, lo crea
         if row["ANO4"] not in count:
@@ -149,11 +149,11 @@ def cant_personas_alfabetizadas(csv_reader):
     imprimir_alfabetizadas(count)
 
 
-def porc_extranjero_universitario(anio, trim, csv_reader):
+def porc_extranjero_universitario(anio, trim, data):
 
     count = {"argentino": 0, "extranjero": 0}
 
-    for row in csv_reader:
+    for row in data:
         if row["ANO4"] == anio and row["TRIMESTRE"] == trim and row["NIVEL_ED_str"] == "Superior o universitario":
             if int(row["CH15"]) in (4, 5):
                 count["extranjero"] += int(row["PONDERA"])
