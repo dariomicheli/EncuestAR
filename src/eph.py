@@ -22,10 +22,7 @@ def add_data_ch04str(row):
     if not 'CH04_str' in row:
         return
 
-    if row["CH04"] == "1":
-        row["CH04_str"] = "Masculino"
-    else:
-        row["CH04_str"] = "Femenino"
+    row["CH04_str"] = "Masculino" if row["CH04"] == "1" else "Femenino"
 
 
 def add_data_nivel_ed_str(row):
@@ -98,12 +95,7 @@ def add_data_universitario(row):
         row["UNIVERSITARIO"] = 2
         return
 
-    level = int(row["CH12"])
-
-    if level == 8 or level == 7 and row["CH13"] == "1":
-        row["UNIVERSITARIO"] = 1
-    else:
-        row["UNIVERSITARIO"] = 0
+    row["UNIVERSITARIO"] = 1 if row["CH12"] == "8" or row["CH12"] == "7" and row["CH13"] == "1" else 0
 
 
 def imprimir_alfabetizadas(diccionario):
